@@ -1,0 +1,25 @@
+---
+- name: Create missing directories
+  become: yes
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: '0755'
+    recurse: "{{ item.recurse }}"
+  with_items:
+    - { path: "{{ portainer_agent_data }}", recurse: no}
+
+- name: Create portainer agent files
+  become: yes
+  template:
+    src: "{{ item.template }}.j2"
+    dest: "{{ item.path }}/{{ item.template }}"
+    mode: "{{ item.mode }}"
+    group: docker
+  with_items:
+    - { template: docker-compose-portainer-agent.yml , path: "{{ node_home }}", mode: '0644' }
+    - { template: portainer_agent_start.sh , path: "{{ node_home }}", mode: '0755' }
+
+- name: Run the container
+  become: yes
+  command: "bash {{ node_home }}/portainer_agent_start.sh"

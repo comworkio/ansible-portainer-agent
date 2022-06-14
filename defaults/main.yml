@@ -1,0 +1,5 @@
+portainer_agent_version: 2.13.1
+portainer_agent_data: /home/portainer/data
+portainer_agent_force_recreate: true
+portainer_agent_id: changeit
+portainer_agent_key: changeit
